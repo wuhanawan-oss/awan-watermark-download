@@ -1,49 +1,46 @@
-# 阿万去水印 v1.2 下载
+# 阿万去水印下载
 
-Windows 64 位完整离线包。此仓库分发基于原阿万 v1.2 的本地修改版：批量排队、FGT FP16 混合精度、兼容 MP4 导出、可选预览。
+当前本地修改版：**v1.2.1 — 排队任务可取消**。Windows 64 位，保留原来的批量排队、FP16 混合精度、兼容 MP4 导出和可选预览。
 
-**[打开下载页面](https://github.com/wuhanawan-oss/awan-watermark-download/releases/latest)**
+**[最新下载页面](https://github.com/wuhanawan-oss/awan-watermark-download/releases/latest)**
 
-## Windows 终端下载
+## 已有软件：只下载升级包
 
-在 PowerShell 中执行下面两行。脚本会下载三个分卷，校验 SHA256，再合并为完整 ZIP。默认保存到桌面的 `Awan-Download-20261003` 文件夹，不会运行软件。
+[下载 v1.2.1 升级包（约 0.86 MB）](https://github.com/wuhanawan-oss/awan-watermark-download/releases/download/v1.2.1-queue-cancel-20261004/Awan-update-v1.2.1-win64.zip)
+
+1. 等当前处理完成，在原软件目录运行 Stop.cmd 退出后台。
+2. 将升级包解压到“阿万去水印.exe”所在目录，覆盖同名文件。
+3. 再启动软件并刷新页面。仅刷新网页不能更新后台。
+
+保留模型、视频、结果与历史记录，不必重下完整软件。
+
+## 新安装：Windows 终端下载
+
+在 PowerShell 执行以下两行：
 
 ```powershell
 Invoke-WebRequest -Uri "https://github.com/wuhanawan-oss/awan-watermark-download/releases/latest/download/Download-Awan.ps1" -OutFile Download-Awan.ps1 -UseBasicParsing
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Download-Awan.ps1
 ```
 
-当前完整 ZIP 大小为 4,057,295,307 字节，解压内容约 6.78 GB。下载脚本保留分卷及合并后的 ZIP，需要约 8.2 GB 下载空间；连同解压文件建议预留 16 GB。下载前可查看仓库中的 [下载脚本](Download-Awan.ps1)。
+脚本下载并校验原 v1.2 完整离线运行环境（约 4.06 GB），合并分卷，解压到桌面的 `Awan-Download-20261004/software-v1.2.1`，然后应用本次升级。请预留约 16 GB 空间。脚本不会启动软件或模型；完成后进入软件目录双击“阿万去水印.exe”。
 
-完整 ZIP 的 SHA256：
+旧版完整分卷保留在 [v1.2 下载版本](https://github.com/wuhanawan-oss/awan-watermark-download/releases/tag/v1.2-batch-fp16-20261003)，新脚本固定下载这些已验证的基础文件，再应用 v1.2.1 更新。
 
-```text
-fca200939c44a5491b45ef0e49d359e193c1496451afd054a109f6b8de046f8a
-```
+## 取消排队
 
-## 启动
+- 等待中的任务点击“取消排队”，后台跳过它并继续下一条。
+- 显示“已取消，未处理”，水印设置保留。
+- 已取消任务不会被“将全部就绪视频加入队列”自动加回，需要时单独点“重新加入”。
+- 取消仅适用于尚未开始的任务。任务已开始时会提示并刷新状态。
+- 关闭页面不会取消任务；退出或重启软件后不自动恢复未完成任务。
 
-1. 将整个 ZIP 解压到独立文件夹，不能只取出 EXE，也不能直接在 ZIP 中运行。
-2. 双击“阿万去水印.exe”，或运行 Launch.cmd。
-3. 本机页面地址为 `http://127.0.0.1:8765/`。
-4. 如果旧版后台仍在运行，先在旧版目录执行 Stop.cmd，再启动这个版本。仅关闭浏览器不会退出后台。
+## 原有功能
 
-带有私有 Python 和模型，正常使用无需另装 Python 或重新下载模型。NVIDIA CUDA 加速需要可用的驱动；没有 CUDA 时使用 CPU / FP32。
+默认兼容 H.264 / yuv420p MP4；CUDA 上 FGT 默认 FP16 混合精度并可选择 FP32；3 秒预览可选；多视频分别设置水印后串行排队，最多 64 个进行中或等待任务。没有 CUDA 时使用 CPU / FP32。
 
-## 功能
+## 验证与来源
 
-- 默认输出兼容 H.264 / yuv420p MP4，另有无损 RGB MP4 可选。
-- CUDA 上 FGT 默认 FP16 混合精度，可选择 FP32；模型权重与部分计算仍为 FP32。
-- 3 秒预览可选，可以直接提交完整视频。
-- 多视频分别设置水印区域后排队，最多 64 个进行中或等待任务，逐个处理。
-- 同尺寸视频可以主动复用设置；不同尺寸需分别设置。
-- 一个任务失败后继续下一项，各项结果分别下载。
-- 关闭页面不取消已提交任务；退出或重启软件后不自动恢复未完成任务。
+取消行为使用实际代码和模拟任务验证，包括开始边界、失败回退、容量释放、后续继续及重新加入。基础安装包和升级包已校验；下载脚本使用小文件测试验证合并、解压、更新与路径限制。
 
-## 验证范围与来源
-
-完整 ZIP 已做 CRC 检查，三个分卷与合并结果已核验 SHA256。修改代码已做语法检查及模拟排队测试。
-
-此次修改没有运行真实模型或视频；新 FP16 路径的实际速度、画质和不同机器兼容性仍需试用。模型推测被遮挡内容，不能保证完全还原。
-
-此版本不是原作者正式新版。原作者信息、开源来源和第三方许可文件保留在完整包中。本包不包含原用户的输入视频、输出视频、历史任务、运行日志和修改备份。
+此修改未运行真实模型或视频；FP16 实际性能、画质及不同机器兼容性仍需试用。本版不是原作者正式发布的新版，保留原作者、开源来源和第三方许可文件；发布包不包含原用户的视频、结果、历史任务、日志或备份。
