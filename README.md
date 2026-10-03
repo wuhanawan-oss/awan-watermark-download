@@ -9,8 +9,8 @@ Windows 64 位完整离线包。此仓库分发基于原阿万 v1.2 的本地修
 在 PowerShell 中执行下面两行。脚本会下载三个分卷，校验 SHA256，再合并为完整 ZIP。默认保存到桌面的 `Awan-Download-20261003` 文件夹，不会运行软件。
 
 ```powershell
-curl.exe -fL "https://github.com/wuhanawan-oss/awan-watermark-download/releases/latest/download/Download-Awan.ps1" -o Download-Awan.ps1
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Download-Awan.ps1 -BaseUrl "https://github.com/wuhanawan-oss/awan-watermark-download/releases/latest/download"
+Invoke-WebRequest -Uri "https://github.com/wuhanawan-oss/awan-watermark-download/releases/latest/download/Download-Awan.ps1" -OutFile Download-Awan.ps1 -UseBasicParsing
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Download-Awan.ps1
 ```
 
 当前完整 ZIP 大小为 4,057,295,307 字节，解压内容约 6.78 GB。下载脚本保留分卷及合并后的 ZIP，需要约 8.2 GB 下载空间；连同解压文件建议预留 16 GB。下载前可查看仓库中的 [下载脚本](Download-Awan.ps1)。
